@@ -1,66 +1,76 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <base target="_top">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- css here -->
-	<link rel="stylesheet" href="style.css">
-	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-	<title>輕鐵抵站時間</title>
-  </head>
-  <body>
-    <p id="line" style="display:none;"></p>
-    <p id="station" style="display:none;"></p>
-    <div class="centerDiv">
-      <h1>輕鐵抵站時間</h1>
-    </div>
-	<h3 id="routeNumber"></h1>
-	<h3 id="stopName"></h1>
-	
-	<div class="centerDiv">
-		<input type="text" id="routeSearch" class="routeSearch" onkeyup="searchRoute()" placeholder="Search...">
-	</div>
+	<head>
+		<base target="_top">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- css here -->
+		<link rel="stylesheet" href="style.css">
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+		<title>輕鐵抵站時間</title>
+	</head>
+  
+	<body>
+		<div id="mySidenav" class="sidenav">
+			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+			<a href="https://tiscopeey.github.io/mtr">港鐵抵站時間</a>
+			<a href="https://moscarke.github.io/allbus">巴士抵站時間</a>
+			<a href="https://moscarke.github.io/lrt">輕鐵抵站時間</a>
+			<a href="">小巴抵站時間(Coming soon)</a>
+		</div>
+		
+		<div>
+			<span style="font-size:30px;cursor:pointer;position: absolute" onclick="openNav()">&#9776;</span>
+		</div>
+			
+			
+		<p id="line" style="display:none;"></p>
+		<p id="station" style="display:none;"></p>
+		<div class="centerDiv">
+			<h1>輕鐵抵站時間</h1>
+		</div>
+		<h3 id="routeNumber"></h1>
+		<h3 id="stopName"></h1>
 
-    <div id="routeList" style="display: none;">
-      <table id="routeTable" class="timetable">
-        
-      </table>
-    </div>
+		<div class="centerDiv">
+			<input type="text" id="routeSearch" class="routeSearch" onkeyup="searchRoute()" placeholder="Search...">
+		</div>
 
-    <div id="stationList" style="display: none;">
-      <table id="stationTable" class="timetable">
-        
-      </table>
-    </div>
-	
-	<div id="etaList" style="display: none;">
-      <table id="etaTable" class="timetable">
-        
-      </table>
-    </div>
-	
-	<div class="centerDiv">
-      <span id="waiting" class="loadingsrn" style="color: lime;">請稍等</span>
-    </div>
+		<div id="routeList" style="display: none;">
+			<table id="routeTable" class="timetable">
 
-    <div class="centerDiv" id="loadingdiv">
-      <span id="loading" class="loadingsrn" style="display: none;">搜尋中...</span>
-    </div>
-	
-	<div class="centerDiv" id="backRoute" style="display: none;">
-      <input type="button" class="btnOne" value="返回車站列表" onclick="backToStopList();" style="background-color: #3333CC;" id="backToStopList">
-	  <input type="button" class="btnOne" value="其他同站路線" onclick="allEta();" style="background-color: #E68A00;" id="allEta">
-    </div>
+			</table>
+		</div>
 
-    <div class="centerDiv" id="bkhp">
-      <input type="button" class="btnOne" value="返回主頁" onclick="hptoHome();" style="background-color: #69928F; display: block;" id="hp">
-    </div>
-	
-	<p style="font-size: 50%;">Disclaimer: This site may use various types of technologies to record visit data to analyse site traffic and provide a better experience.</p>
-	<div style="display: none;">
-      <img style="display:none" src="https://data.gov.hk/assets/shared/img/logo_psi-portal-2x.png" />
-    </div>
+		<div id="stationList" style="display: none;">
+			<table id="stationTable" class="timetable">
 
-	<script src="script.js"></script>
-  </body>
+			</table>
+		</div>
+
+		<div id="etaList" style="display: none;">
+			<table id="etaTable" class="timetable">
+
+			</table>
+		</div>
+
+		<div class="centerDiv">
+			<span id="waiting" class="loadingsrn" style="color: lime;">請稍等</span>
+		</div>
+
+		<div class="centerDiv" id="loadingdiv">
+			<span id="loading" class="loadingsrn" style="display: none;">搜尋中...</span>
+		</div>
+
+		<div class="centerDiv" id="backRoute" style="display: none;">
+			<input type="button" class="btnOne" value="返回車站列表" onclick="backToStopList();" style="background-color: #3333CC;" id="backToStopList">
+			<input type="button" class="btnOne" value="其他同站路線" onclick="allEta();" style="background-color: #E68A00;" id="allEta">
+		</div>
+
+		<div class="centerDiv" id="bkhp">
+			<input type="button" class="btnOne" value="返回主頁" onclick="hptoHome();" style="background-color: #69928F; display: block;" id="hp">
+		</div>
+
+		<p style="font-size: 50%;">Disclaimer: This site may use various types of technologies to record visit data to analyse site traffic and provide a better experience.</p>
+		<script src="script.js"></script>
+	</body>
 </html>

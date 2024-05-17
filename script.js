@@ -195,3 +195,11 @@ function backToStopList(){
 	document.getElementById("stopName").style.display = "none";
 	document.getElementById("backRoute").style.display = "none";
 }
+
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
