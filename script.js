@@ -163,7 +163,7 @@ function routeStopEta (stopId, route, direction, stopName, destination, sequence
 			
 			// document.getElementById("etaTable").innerHTML = x;
 			// document.getElementById("etaList").style.display = "block";
-			document.getElementById("backRoute").style.display = "flex";
+			// document.getElementById("backRoute").style.display = "flex";
 			document.getElementById("allEta").onclick = function () {allEta(responseList)};
 			// document.getElementById("loading").style.display = "none";
 			// document.getElementById("stopName").innerHTML = "輕鐵站： " + stopName;
