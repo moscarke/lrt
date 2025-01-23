@@ -50,6 +50,7 @@ markdown("LRT-onload", "", "", "");
 function hptoHome(){
 	document.getElementById("routeSearch").style.display = "block";
 	document.getElementById("stationList").style.display = "none";
+	document.getElementById("stationTable").innerHTML = "<tbody><tr><td></td><td><strong>輕鐵站</strong></td></tr></tbody>";
 	document.getElementById("etaList").style.display = "none";
 	document.getElementById("routeNumber").innerHTML = "";
 	document.getElementById("stopName").innerHTML = "";
@@ -67,31 +68,61 @@ function routeStop(route, direction, destination){
 	document.getElementById("loading").style.display = "block";
 	
 	let start, j = 0, x = "<tr><td><strong></strong></td><td><strong>輕鐵站</strong></td></tr>";
+	const tbody = document.querySelector("#stationTable tbody");
 
 	for (let i = 1; i < stopList.length; i++){
 		if (stopList[i][0] == route && stopList[i][1] == direction){
 			start = true, j++;
-			x = x + "<tr><td>" + j + "</td><td><button class='btnEta' style='text-align: left' onclick=\"routeStopEta('" + stopList[i][3] + "', '" + route + "', '" + direction + "', '" + stopList[i][4] + "', '" +  destination + "')\">" + stopList[i][4] + "</button></td></tr>";
-			continue;
-		}
-		if (start){
-			break;
+
+			let tr = document.createElement("tr");
+			let number = document.createElement("td");
+			let stopName = document.createElement("td");
+			let button = document.createElement("button");
+			let eta = document.createElement("div");
+			let num = j-1;
+			
+			number.textContent = j;
+			button.className = "btnEta";
+			button.style = "text-align: left";
+			button.onclick = function (){routeStopEta(stopList[i][3], route, direction, stopList[i][4], destination, num)};
+			button.textContent = stopList[i][4];
+			eta.id = (num).toString();
+			eta.style = "white-space: pre-wrap";
+
+
+			// x = x + "<tr><td>" + j + "</td><td><button class='btnEta' style='text-align: left' onclick=\"routeStopEta('" + stopList[i][3] + "', '" + route + "', '" + direction + "', '" + stopList[i][4] + "', '" +  destination + "')\">" + stopList[i][4] + "</button></td></tr>";
+			stopName.append(button);
+			stopName.append(eta);
+			tr.append(number);
+			tr.append(stopName);
+			tbody.append(tr);
 		}
 	}
 	
-	document.getElementById("stationTable").innerHTML = x;
+	// document.getElementById("stationTable").innerHTML = x;
 	document.getElementById("stationList").style.display = "block";
 	document.getElementById("loading").style.display = "none";
 	document.getElementById("routeNumber").innerHTML = "路線： " + route;
 }
 
 //figure out the eta given a stop-id and a route
-function routeStopEta (stopId, route, direction, stopName, destination){
+function routeStopEta (stopId, route, direction, stopName, destination, sequence){
 	document.getElementById("routeList").style.display = "none";
-	document.getElementById("loading").style.display = "block";
-	document.getElementById("stationList").style.display = "none";
-	let etaTime, remark, stopSeq = 0, scheduled, departureList;
-	console.log(stopId, route, direction);
+	// document.getElementById("loading").style.display = "block";
+	// document.getElementById("stationList").style.display = "none";
+	let remark, count = 0, departureList, div = document.getElementById(sequence);
+	const eta = [];
+	
+	for (let i = 0; i < stopList.length; i++){
+		if (stopList[i][0] == route && stopList[i][1] == direction){
+			count++
+		}
+	}
+
+	for (let i = 0; i < count; i++){
+		let div = document.getElementById(i);	
+		div.innerHTML = "";
+	}
 	
 	markdown("LRT-Info", route, stopId, direction);
 	
@@ -104,7 +135,7 @@ function routeStopEta (stopId, route, direction, stopName, destination){
 	
 	xhttpr.open("GET", url, true);
 	
-	let x = "<tr><td><strong></strong></td><td><strong>目的地</strong></td><td><strong>到站時間</strong></td></tr>";
+	// let x = "<tr><td><strong></strong></td><td><strong>目的地</strong></td><td><strong>到站時間</strong></td></tr>";
 
 	xhttpr.send();
 
@@ -118,28 +149,59 @@ function routeStopEta (stopId, route, direction, stopName, destination){
 				departureList = responseList[i]["route_list"];
 				for (let j = 0; j < departureList.length; j++){
 					if (departureList[j]["route_no"] == route && departureList[j]["dest_ch"] == destination){
-						etaTime = departureList[j]["time_ch"];
-						remark = "<p style='font-size: 75%;color: lightcyan;margin: 0px 0px'>單卡</p>";
+						// etaTime = ;
+						remark = "單卡";
 						if (departureList[j]["train_length"] == 2){
-							remark = "<p style='font-size: 75%;color: lightcyan;margin: 0px 0px'>拖卡</p>";
+							remark = "拖卡";
 						}
 						sequence++;
-						x = x + "<tr><td>" + sequence + "</td><td>" + destination + "</td><td>" + etaTime + remark + "</td></tr>";
+						eta.push({dest: destination, time: departureList[j]["time_ch"], remark: remark, plat: responseList[i]["platform_id"]})
+						// x = x + "<tr><td>" + sequence + "</td><td>" + destination + "</td><td>" + etaTime + remark + "</td></tr>";
 					}
 				}
 			}
-			if (x == "<tr><td><strong></strong></td><td><strong>目的地</strong></td><td><strong>到站時間</strong></td></tr>"){
-				x = "<tr><td><strong>未來60分鐘沒有由此站開出的班次</strong></td><tr>";
-			}
-			document.getElementById("etaTable").innerHTML = x;
-			document.getElementById("etaList").style.display = "block";
+			
+			// document.getElementById("etaTable").innerHTML = x;
+			// document.getElementById("etaList").style.display = "block";
 			document.getElementById("backRoute").style.display = "flex";
 			document.getElementById("allEta").onclick = function () {allEta(responseList)};
-			document.getElementById("loading").style.display = "none";
-			document.getElementById("stopName").innerHTML = "輕鐵站： " + stopName;
-			document.getElementById("stopName").style.display = "block";
+			// document.getElementById("loading").style.display = "none";
+			// document.getElementById("stopName").innerHTML = "輕鐵站： " + stopName;
+			// document.getElementById("stopName").style.display = "block";
+
+			outputEta(eta, div);
 		}
     }
+}
+
+function outputEta(eta, div){
+	// eta.sort(function (a, b) {
+	// 	return a.time.localeCompare(b.time);
+	// });
+
+	for (let i = 0; i < eta.length; i++){
+		// let etaStamp = new Date(eta[i].time);
+		// let currentTime = new Date()
+		// etaStamp = (etaStamp.getTime() - currentTime.getTime()) / 60000;
+		// etaStamp = Math.ceil(etaStamp);
+		// if (etaStamp <= 0){
+		// 	etaStamp = 1;
+		// }
+		if (eta[i].remark == null){
+			eta[i].remark = "";
+		}
+		
+		let row = document.createElement("span");
+		row.style = "font-size: 80%"
+		// let time = etaStamp.toString() + "分鐘";
+		row.textContent = eta[i].time + " " + eta[i].dest + " " + eta[i].remark + " " + eta[i].plat + "號月台";
+		
+		row.appendChild(document.createElement("br"));
+		div.appendChild(row);
+	}
+	if (eta.length == 0){
+		div.innerHTML = "<span>未有班次資料</span>";
+	}
 }
 
 function searchRoute(){
